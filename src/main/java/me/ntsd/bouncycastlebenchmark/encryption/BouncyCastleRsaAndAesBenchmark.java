@@ -34,13 +34,13 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
     private RSAEngine encryptEngine;
     private AsymmetricBlockCipher decryptEngine;
 
-    private static AsymmetricCipherKeyPair generateKeys() throws NoSuchAlgorithmException {
+    private static AsymmetricCipherKeyPair generateKeys() {
         RSAKeyPairGenerator generator = new RSAKeyPairGenerator();
         generator.init(new RSAKeyGenerationParameters(
-                new BigInteger("10001", 16), // publicExponent
-                SecureRandom.getInstance("SHA1PRNG"), // pseudorandom number generator
-                1024, // strength
-                80 // certainty
+            BigInteger.valueOf(0x10001), // public exponent
+            new SecureRandom(), // random method
+            1024, // key size
+            80 // strength
         ));
 
         return generator.generateKeyPair();

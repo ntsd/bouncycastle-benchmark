@@ -26,6 +26,7 @@ public class JavaRsaAndAesBenchmark implements BenchmarkAlgorithm {
     private Cipher encryptCipherAes;
     private Cipher decryptCipherAes;
 
+    private BASE64Decoder base64Decoder;
 
     public JavaRsaAndAesBenchmark() throws Exception {
         // AES Init
@@ -45,6 +46,8 @@ public class JavaRsaAndAesBenchmark implements BenchmarkAlgorithm {
 
         decryptCipherRsa = Cipher.getInstance("RSA");
         decryptCipherRsa.init(Cipher.DECRYPT_MODE, privateKey);
+
+        base64Decoder = new BASE64Decoder();
     }
 
     private static KeyPair buildKeyPair() throws NoSuchAlgorithmException {
@@ -70,7 +73,7 @@ public class JavaRsaAndAesBenchmark implements BenchmarkAlgorithm {
 
     private String decryptAes(String encryptedData, byte[] key) throws Exception {
         decryptCipherAes.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"));
-        byte[] decodedValue = new BASE64Decoder().decodeBuffer(encryptedData);
+        byte[] decodedValue = base64Decoder.decodeBuffer(encryptedData);
         byte[] decValue = decryptCipherAes.doFinal(decodedValue);
         return new String(decValue);
     }
