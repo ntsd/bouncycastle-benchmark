@@ -27,21 +27,19 @@ import java.security.Security;
 public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
 
     private byte[] password;
-    private AsymmetricKeyParameter privateKey;
-    private AsymmetricKeyParameter publicKey;
     private KeyGenerator ivGen;
-
-    private RSAEngine encryptEngine;
-    private AsymmetricBlockCipher decryptEngine;
 
     private PaddedBufferedBlockCipher encryptCipherAes;
     private PaddedBufferedBlockCipher decryptCipherAes;
 
+    private AsymmetricBlockCipher encryptEngine;
+    private AsymmetricBlockCipher decryptEngine;
+
     private AsymmetricCipherKeyPair generateKeys() throws NoSuchAlgorithmException {
         RSAKeyPairGenerator generator = new RSAKeyPairGenerator();
         generator.init(new RSAKeyGenerationParameters(
-            new BigInteger("10001", 16), // publicExponent
-            SecureRandom.getInstance("SHA1PRNG"), // random number generator
+            BigInteger.valueOf(0x10001), // public exponent
+            new SecureRandom(), // random number generator
             1024, // key size
             80 // certainty
         ));
@@ -64,45 +62,22 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
 
         // RSA Init
         AsymmetricCipherKeyPair keyPair = generateKeys();
-        privateKey = keyPair.getPrivate();
-        publicKey = keyPair.getPublic();
+        AsymmetricKeyParameter privateKey = keyPair.getPrivate();
+        AsymmetricKeyParameter publicKey = keyPair.getPublic();
 
         encryptEngine = new RSAEngine();
+        encryptEngine.init(true, publicKey); // true for encrypt with publicKey
+
         decryptEngine = new RSAEngine();
+        decryptEngine.init(false, privateKey); // false for decryption with privateKey
     }
 
-    private String getHexString(byte[] b) {
-        String result = "";
-        for (int i = 0; i < b.length; i++) {
-            result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
-        }
-        return result;
+    private byte[] encryptRsa(byte[] data) throws Exception {
+        return encryptEngine.processBlock(data, 0, data.length);
     }
 
-    private byte[] hexStringToByteArray(String s) {
-        int len = s.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i + 1), 16));
-        }
-        return data;
-    }
-
-    private String encryptRsa(byte[] data, AsymmetricKeyParameter publicKey) {
-        encryptEngine.init(true, publicKey); // true if encrypt
-
-        byte[] hexEncodedCipher = encryptEngine.processBlock(data, 0, data.length);
-
-        return getHexString(hexEncodedCipher);
-    }
-
-    private byte[] decryptRsa(String encrypted, AsymmetricKeyParameter privateKey) throws InvalidCipherTextException {
-        decryptEngine.init(false, privateKey); // false for decryption
-
-        byte[] encryptedBytes = hexStringToByteArray(encrypted);
-        byte[] hexEncodedCipher = decryptEngine.processBlock(encryptedBytes, 0, 128);
-
-        return hexEncodedCipher;
+    private byte[] decryptRsa(byte[] encryptedBytes) throws InvalidCipherTextException {
+        return decryptEngine.processBlock(encryptedBytes, 0, encryptedBytes.length);
     }
 
     private byte[] cipherData(PaddedBufferedBlockCipher cipher, byte[] data) throws Exception {
@@ -145,9 +120,9 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
 
         byte[] encryptedMessage = encryptAes(plainText, ivAndKey);
 
-        String encryptedIv = encryptRsa(iv, publicKey);
+        byte[] encryptedIv = encryptRsa(iv);
 
-        byte[] decryptedIV = decryptRsa(encryptedIv, privateKey);
+        byte[] decryptedIV = decryptRsa(encryptedIv);
 
         CipherParameters ivAndKey2 = new ParametersWithIV(new KeyParameter(password), decryptedIV);
 

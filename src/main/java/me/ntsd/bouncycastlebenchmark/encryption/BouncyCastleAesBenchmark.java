@@ -27,11 +27,11 @@ public class BouncyCastleAesBenchmark implements BenchmarkAlgorithm {
         Security.addProvider(new BouncyCastleProvider());
 
         KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-        keyGen.init(128); //key is 128 bits
+        keyGen.init(128); // key is 128 bits
         password = keyGen.generateKey().getEncoded();
 
         ivGen = KeyGenerator.getInstance("AES");
-        ivGen.init(128); //iv is 128 bits
+        ivGen.init(128); // iv is 128 bits
 
         encryptCipherAes = new PaddedBufferedBlockCipher(new CBCBlockCipher(new AESEngine()));
         decryptCipherAes = new PaddedBufferedBlockCipher(new CBCBlockCipher(new AESEngine()));

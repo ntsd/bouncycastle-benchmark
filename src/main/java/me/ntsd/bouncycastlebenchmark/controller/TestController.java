@@ -24,16 +24,16 @@ public class TestController {
 
         Benchmark benchmark = new Benchmark();
 
-        BouncyCastleRsaAndAesBenchmark bouncyCastleRsaAndAesBenchmark = new BouncyCastleRsaAndAesBenchmark();
+//        BouncyCastleRsaAndAesBenchmark bouncyCastleRsaAndAesBenchmark = new BouncyCastleRsaAndAesBenchmark();
+//        benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(bouncyCastleRsaAndAesBenchmark, message, Arrays.asList(10, 50, 100)));
+
+//        JavaRsaAndAesBenchmark javaRsaAndAesBenchmark = new JavaRsaAndAesBenchmark();
+//        benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(javaRsaAndAesBenchmark, message, Arrays.asList(10, 50, 100)));
+
         BouncyCastleRsaBenchmark bouncyCastleRsaBenchmark = new BouncyCastleRsaBenchmark();
-
-        JavaRsaAndAesBenchmark javaRsaAndAesBenchmark = new JavaRsaAndAesBenchmark();
-        JavaRsaBenchmark javaRsaBenchmark = new JavaRsaBenchmark();
-
-        benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(bouncyCastleRsaAndAesBenchmark, message, Arrays.asList(10, 50, 100)));
-        benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(javaRsaAndAesBenchmark, message, Arrays.asList(10, 50, 100)));
-
         benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(bouncyCastleRsaBenchmark, message, Arrays.asList(10, 50, 100, 500)));
+
+        JavaRsaBenchmark javaRsaBenchmark = new JavaRsaBenchmark();
         benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(javaRsaBenchmark, message, Arrays.asList(10, 50, 100, 500)));
 
         return benchmarkResultList;

@@ -18,14 +18,14 @@ import java.security.Security;
 
 public class BouncyCastleRsaBenchmark implements BenchmarkAlgorithm {
 
-    private AsymmetricBlockCipher privateEngine;
-    private AsymmetricBlockCipher publicEngine;
+    private AsymmetricBlockCipher encryptEngine;
+    private AsymmetricBlockCipher decryptEngine;
 
     private AsymmetricCipherKeyPair GenerateKeys() throws NoSuchAlgorithmException {
         RSAKeyPairGenerator generator = new RSAKeyPairGenerator();
         generator.init(new RSAKeyGenerationParameters(
-                new BigInteger("10001", 16), // publicExponent
-                SecureRandom.getInstance("SHA1PRNG"), // random number generator
+                BigInteger.valueOf(0x10001), // public exponent
+                new SecureRandom(), // random number generator
                 1024, // key size
                 80 // certainty
         ));
@@ -41,41 +41,19 @@ public class BouncyCastleRsaBenchmark implements BenchmarkAlgorithm {
         AsymmetricKeyParameter privateKey = keyPair.getPrivate();
         AsymmetricKeyParameter publicKey = keyPair.getPublic();
 
-        privateEngine = new RSAEngine();
-        privateEngine.init(false, privateKey); //false for decryption
+        encryptEngine = new RSAEngine();
+        encryptEngine.init(true, publicKey); // true for encrypt with publicKey
 
-        publicEngine = new RSAEngine();
-        publicEngine.init(false, publicKey); //false for decryption
+        decryptEngine = new RSAEngine();
+        decryptEngine.init(false, privateKey); // false for decryption with privateKey
     }
 
-    private String getHexString(byte[] b) {
-        String result = "";
-        for (int i = 0; i < b.length; i++) {
-            result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
-        }
-        return result;
+    private byte[] encryptRsa(byte[] data) throws Exception {
+        return encryptEngine.processBlock(data, 0, data.length);
     }
 
-    private byte[] hexStringToByteArray(String s) {
-        int len = s.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i + 1), 16));
-        }
-        return data;
-    }
-
-    private String encryptRsa(byte[] data) throws Exception {
-        byte[] hexEncodedCipher = publicEngine.processBlock(data, 0, data.length);
-
-        return getHexString(hexEncodedCipher);
-    }
-
-    private String decryptRsa(String encrypted) throws InvalidCipherTextException {
-        byte[] encryptedBytes = hexStringToByteArray(encrypted);
-        byte[] hexEncodedCipher = privateEngine.processBlock(encryptedBytes, 0, encryptedBytes.length);
-
-        return new String(hexEncodedCipher);
+    private byte[] decryptRsa(byte[] encryptedBytes) throws InvalidCipherTextException {
+        return decryptEngine.processBlock(encryptedBytes, 0, encryptedBytes.length);
     }
 
     @Override
@@ -85,8 +63,8 @@ public class BouncyCastleRsaBenchmark implements BenchmarkAlgorithm {
 
     @Override
     public void run(String text) throws Exception {
-        String encryptedMessage = encryptRsa(text.getBytes());
-        String decryptedMessage = decryptRsa(encryptedMessage);
+        byte[] encryptedBytes = encryptRsa(text.getBytes());
+        String decryptedMessage = new String(decryptRsa(encryptedBytes));
 
         if (!decryptedMessage.equals(text)) {
             throw new Exception("not match");
