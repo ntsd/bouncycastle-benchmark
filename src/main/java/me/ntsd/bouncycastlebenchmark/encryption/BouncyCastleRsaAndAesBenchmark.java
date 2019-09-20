@@ -35,7 +35,7 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
     private AsymmetricBlockCipher encryptEngine;
     private AsymmetricBlockCipher decryptEngine;
 
-    private AsymmetricCipherKeyPair generateKeys() throws NoSuchAlgorithmException {
+    private AsymmetricCipherKeyPair generateKeys() {
         RSAKeyPairGenerator generator = new RSAKeyPairGenerator();
         generator.init(new RSAKeyGenerationParameters(
             BigInteger.valueOf(0x10001), // public exponent
@@ -66,13 +66,13 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
         AsymmetricKeyParameter publicKey = keyPair.getPublic();
 
         encryptEngine = new RSAEngine();
-        encryptEngine.init(true, publicKey); // true for encrypt with publicKey
+        encryptEngine.init(true, publicKey); // true for encryption
 
         decryptEngine = new RSAEngine();
-        decryptEngine.init(false, privateKey); // false for decryption with privateKey
+        decryptEngine.init(false, privateKey); // false for decryption
     }
 
-    private byte[] encryptRsa(byte[] data) throws Exception {
+    private byte[] encryptRsa(byte[] data) throws InvalidCipherTextException {
         return encryptEngine.processBlock(data, 0, data.length);
     }
 

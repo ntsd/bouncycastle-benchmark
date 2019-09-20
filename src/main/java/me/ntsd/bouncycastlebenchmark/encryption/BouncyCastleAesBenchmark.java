@@ -37,7 +37,7 @@ public class BouncyCastleAesBenchmark implements BenchmarkAlgorithm {
         decryptCipherAes = new PaddedBufferedBlockCipher(new CBCBlockCipher(new AESEngine()));
     }
 
-    private static byte[] cipherData(PaddedBufferedBlockCipher cipher, byte[] data) throws Exception {
+    private byte[] cipherData(PaddedBufferedBlockCipher cipher, byte[] data) throws Exception {
         byte[] outputBuffer = new byte[cipher.getOutputSize(data.length)];
 
         int length1 = cipher.processBytes(data,  0, data.length, outputBuffer, 0);

@@ -11,7 +11,6 @@ import org.bouncycastle.crypto.params.RSAKeyGenerationParameters;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.math.BigInteger;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.Security;
 
@@ -21,7 +20,7 @@ public class BouncyCastleRsaBenchmark implements BenchmarkAlgorithm {
     private AsymmetricBlockCipher encryptEngine;
     private AsymmetricBlockCipher decryptEngine;
 
-    private AsymmetricCipherKeyPair GenerateKeys() throws NoSuchAlgorithmException {
+    private AsymmetricCipherKeyPair GenerateKeys() {
         RSAKeyPairGenerator generator = new RSAKeyPairGenerator();
         generator.init(new RSAKeyGenerationParameters(
                 BigInteger.valueOf(0x10001), // public exponent
@@ -33,7 +32,7 @@ public class BouncyCastleRsaBenchmark implements BenchmarkAlgorithm {
         return generator.generateKeyPair();
     }
 
-    public BouncyCastleRsaBenchmark() throws NoSuchAlgorithmException {
+    public BouncyCastleRsaBenchmark() {
         Security.addProvider(new BouncyCastleProvider());
 
         // RSA Init
@@ -42,13 +41,13 @@ public class BouncyCastleRsaBenchmark implements BenchmarkAlgorithm {
         AsymmetricKeyParameter publicKey = keyPair.getPublic();
 
         encryptEngine = new RSAEngine();
-        encryptEngine.init(true, publicKey); // true for encrypt with publicKey
+        encryptEngine.init(true, publicKey); // true for encryption
 
         decryptEngine = new RSAEngine();
-        decryptEngine.init(false, privateKey); // false for decryption with privateKey
+        decryptEngine.init(false, privateKey); // false for decryption
     }
 
-    private byte[] encryptRsa(byte[] data) throws Exception {
+    private byte[] encryptRsa(byte[] data) throws InvalidCipherTextException {
         return encryptEngine.processBlock(data, 0, data.length);
     }
 
