@@ -21,10 +21,10 @@ public class JavaAes {
     private Cipher decryptCipherAes;
 
     public JavaAes() throws NoSuchAlgorithmException, NoSuchPaddingException {
-        aesKeyGenerator = KeyGenerator.getInstance("AES/CBC/PKCS5PADDING");
+        aesKeyGenerator = KeyGenerator.getInstance("AES");
         aesKeyGenerator.init(128);  // AES 128 bit
 
-        ivGenerator = KeyGenerator.getInstance("AES/CBC/PKCS5PADDING");
+        ivGenerator = KeyGenerator.getInstance("AES");
         ivGenerator.init(128); // iv is 128 bits
 
         encryptCipherAes = Cipher.getInstance("AES/CBC/PKCS5PADDING");
