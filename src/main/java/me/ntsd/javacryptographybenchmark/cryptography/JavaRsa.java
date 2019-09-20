@@ -1,6 +1,4 @@
-package me.ntsd.javacryptographybenchmark.encryption;
-
-import me.ntsd.javacryptographybenchmark.benchmark.BenchmarkAlgorithm;
+package me.ntsd.javacryptographybenchmark.cryptography;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -14,12 +12,12 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 
 
-public class JavaRsaBenchmark implements BenchmarkAlgorithm {
+public class JavaRsa {
 
     private Cipher decryptCipher;
     private Cipher encryptCipher;
 
-    public JavaRsaBenchmark() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
+    public JavaRsa() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
         KeyPair keyPair = buildKeyPair();
         final PublicKey publicKey = keyPair.getPublic();
         final PrivateKey privateKey = keyPair.getPrivate();
@@ -31,33 +29,18 @@ public class JavaRsaBenchmark implements BenchmarkAlgorithm {
         decryptCipher.init(Cipher.DECRYPT_MODE, privateKey);
     }
 
-    private static KeyPair buildKeyPair() throws NoSuchAlgorithmException {
+    private KeyPair buildKeyPair() throws NoSuchAlgorithmException {
         final int keySize = 1024;
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(keySize);
         return keyPairGenerator.genKeyPair();
     }
 
-    private byte[] encrypt(String message) throws BadPaddingException, IllegalBlockSizeException {
-        return encryptCipher.doFinal(message.getBytes());
+    public byte[] encrypt(byte[] data) throws BadPaddingException, IllegalBlockSizeException {
+        return encryptCipher.doFinal(data);
     }
 
-    private byte[] decrypt(byte [] encrypted) throws BadPaddingException, IllegalBlockSizeException {
+    public byte[] decrypt(byte[] encrypted) throws BadPaddingException, IllegalBlockSizeException {
         return decryptCipher.doFinal(encrypted);
-    }
-
-    @Override
-    public String getAlgorithmName() {
-        return "Javax Crypto RSA";
-    }
-
-    public void run(String text) throws Exception {
-        byte[] encryptedMessage = encrypt(text);
-
-        String decryptedMessage = new String(decrypt(encryptedMessage));
-
-        if (!decryptedMessage.equals(text)) {
-            throw new AssertionError("Message not match");
-        }
     }
 }

@@ -1,11 +1,12 @@
 package me.ntsd.javacryptographybenchmark.controller;
 
 import me.ntsd.javacryptographybenchmark.benchmark.Benchmark;
-import me.ntsd.javacryptographybenchmark.encryption.BouncyCastleAesBenchmark;
-import me.ntsd.javacryptographybenchmark.encryption.BouncyCastleRsaAndAesBenchmark;
-import me.ntsd.javacryptographybenchmark.encryption.BouncyCastleRsaBenchmark;
-import me.ntsd.javacryptographybenchmark.encryption.JavaRsaAndAesBenchmark;
-import me.ntsd.javacryptographybenchmark.encryption.JavaRsaBenchmark;
+import me.ntsd.javacryptographybenchmark.benchmark.BouncyCastleAesBenchmark;
+import me.ntsd.javacryptographybenchmark.benchmark.BouncyCastleRsaAndAesBenchmark;
+import me.ntsd.javacryptographybenchmark.benchmark.BouncyCastleRsaBenchmark;
+import me.ntsd.javacryptographybenchmark.benchmark.JavaAesBenchmark;
+import me.ntsd.javacryptographybenchmark.benchmark.JavaRsaAndAesBenchmark;
+import me.ntsd.javacryptographybenchmark.benchmark.JavaRsaBenchmark;
 import me.ntsd.javacryptographybenchmark.model.BenchmarkResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +40,9 @@ public class TestController {
 
         BouncyCastleAesBenchmark bouncyCastleAesBenchmark = new BouncyCastleAesBenchmark();
         benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(bouncyCastleAesBenchmark, message, Arrays.asList(10, 50, 100, 500)));
+
+        JavaAesBenchmark javaAesBenchmark = new JavaAesBenchmark();
+        benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(javaAesBenchmark, message, Arrays.asList(10, 50, 100, 500)));
 
         return benchmarkResultList;
     }
