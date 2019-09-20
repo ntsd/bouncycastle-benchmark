@@ -17,7 +17,6 @@ import java.security.PublicKey;
 public class JavaRsaBenchmark implements BenchmarkAlgorithm {
 
     private Cipher decryptCipher;
-
     private Cipher encryptCipher;
 
     public JavaRsaBenchmark() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
@@ -58,7 +57,7 @@ public class JavaRsaBenchmark implements BenchmarkAlgorithm {
         String decryptedMessage = new String(decrypt(encryptedMessage));
 
         if (!decryptedMessage.equals(text)) {
-            throw new AssertionError("not match");
+            throw new AssertionError("Message not match");
         }
     }
 }

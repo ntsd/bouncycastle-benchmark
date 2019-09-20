@@ -11,6 +11,7 @@ import org.bouncycastle.crypto.params.RSAKeyGenerationParameters;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.security.Security;
 
@@ -26,7 +27,7 @@ public class BouncyCastleRsaBenchmark implements BenchmarkAlgorithm {
                 BigInteger.valueOf(0x10001), // public exponent
                 new SecureRandom(), // random number generator
                 1024, // key size
-                80 // certainty
+                64 // certainty
         ));
 
         return generator.generateKeyPair();
@@ -62,12 +63,12 @@ public class BouncyCastleRsaBenchmark implements BenchmarkAlgorithm {
 
     @Override
     public void run(String text) throws Exception {
-        byte[] encryptedBytes = encryptRsa(text.getBytes());
+        byte[] encryptedBytes = encryptRsa(text.getBytes(StandardCharsets.UTF_8));
 
         String decryptedMessage = new String(decryptRsa(encryptedBytes));
 
         if (!decryptedMessage.equals(text)) {
-            throw new AssertionError("not match");
+            throw new AssertionError("Message not match");
         }
     }
 }
