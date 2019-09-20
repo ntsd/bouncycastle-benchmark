@@ -37,13 +37,13 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
     private PaddedBufferedBlockCipher encryptCipherAes;
     private PaddedBufferedBlockCipher decryptCipherAes;
 
-    private static AsymmetricCipherKeyPair generateKeys() {
+    private AsymmetricCipherKeyPair generateKeys() throws NoSuchAlgorithmException {
         RSAKeyPairGenerator generator = new RSAKeyPairGenerator();
         generator.init(new RSAKeyGenerationParameters(
-            BigInteger.valueOf(0x10001), // public exponent
-            new SecureRandom(), // random method
+            new BigInteger("10001", 16), // publicExponent
+            SecureRandom.getInstance("SHA1PRNG"), // random number generator
             1024, // key size
-            12 // certainty
+            80 // certainty
         ));
 
         return generator.generateKeyPair();
@@ -71,7 +71,7 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
         decryptEngine = new RSAEngine();
     }
 
-    private static String getHexString(byte[] b) {
+    private String getHexString(byte[] b) {
         String result = "";
         for (int i = 0; i < b.length; i++) {
             result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
@@ -79,7 +79,7 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
         return result;
     }
 
-    private static byte[] hexStringToByteArray(String s) {
+    private byte[] hexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
@@ -105,7 +105,7 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
         return hexEncodedCipher;
     }
 
-    private static byte[] cipherData(PaddedBufferedBlockCipher cipher, byte[] data) throws Exception {
+    private byte[] cipherData(PaddedBufferedBlockCipher cipher, byte[] data) throws Exception {
         byte[] outputBuffer = new byte[cipher.getOutputSize(data.length)];
 
         int length1 = cipher.processBytes(data,  0, data.length, outputBuffer, 0);

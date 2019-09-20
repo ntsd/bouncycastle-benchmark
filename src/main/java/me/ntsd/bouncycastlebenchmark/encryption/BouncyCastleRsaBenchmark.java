@@ -21,13 +21,13 @@ public class BouncyCastleRsaBenchmark implements BenchmarkAlgorithm {
     private AsymmetricBlockCipher privateEngine;
     private AsymmetricBlockCipher publicEngine;
 
-    private static AsymmetricCipherKeyPair GenerateKeys() throws NoSuchAlgorithmException {
+    private AsymmetricCipherKeyPair GenerateKeys() throws NoSuchAlgorithmException {
         RSAKeyPairGenerator generator = new RSAKeyPairGenerator();
         generator.init(new RSAKeyGenerationParameters(
-                new BigInteger("10001", 16), //publicExponent
-                SecureRandom.getInstance("SHA1PRNG"), //pseudorandom number generator
-                1024, //strength
-                80 //certainty
+                new BigInteger("10001", 16), // publicExponent
+                SecureRandom.getInstance("SHA1PRNG"), // random number generator
+                1024, // key size
+                80 // certainty
         ));
 
         return generator.generateKeyPair();
@@ -48,7 +48,7 @@ public class BouncyCastleRsaBenchmark implements BenchmarkAlgorithm {
         publicEngine.init(false, publicKey); //false for decryption
     }
 
-    private static String getHexString(byte[] b) throws Exception {
+    private String getHexString(byte[] b) {
         String result = "";
         for (int i = 0; i < b.length; i++) {
             result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
@@ -56,7 +56,7 @@ public class BouncyCastleRsaBenchmark implements BenchmarkAlgorithm {
         return result;
     }
 
-    private static byte[] hexStringToByteArray(String s) {
+    private byte[] hexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
