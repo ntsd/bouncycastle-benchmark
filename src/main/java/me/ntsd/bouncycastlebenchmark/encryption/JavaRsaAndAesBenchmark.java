@@ -1,14 +1,15 @@
 package me.ntsd.bouncycastlebenchmark.encryption;
 
-
 import me.ntsd.bouncycastlebenchmark.benchmark.BenchmarkAlgorithm;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -26,9 +27,7 @@ public class JavaRsaAndAesBenchmark implements BenchmarkAlgorithm {
     private Cipher encryptCipherAes;
     private Cipher decryptCipherAes;
 
-    private BASE64Decoder base64Decoder;
-
-    public JavaRsaAndAesBenchmark() throws Exception {
+    public JavaRsaAndAesBenchmark() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
         // AES Init
         ivGen = KeyGenerator.getInstance("AES"); // AES 128 bit
         ivGen.init(128); // iv is 128 bits
@@ -38,16 +37,14 @@ public class JavaRsaAndAesBenchmark implements BenchmarkAlgorithm {
 
         // RSA Init
         KeyPair keyPair = buildKeyPair();
-        PublicKey publicKey = keyPair.getPublic();
-        PrivateKey privateKey = keyPair.getPrivate();
+        final PublicKey publicKey = keyPair.getPublic();
+        final PrivateKey privateKey = keyPair.getPrivate();
 
         encryptCipherRsa = Cipher.getInstance("RSA");
         encryptCipherRsa.init(Cipher.ENCRYPT_MODE, publicKey);
 
         decryptCipherRsa = Cipher.getInstance("RSA");
         decryptCipherRsa.init(Cipher.DECRYPT_MODE, privateKey);
-
-        base64Decoder = new BASE64Decoder();
     }
 
     private static KeyPair buildKeyPair() throws NoSuchAlgorithmException {
@@ -57,24 +54,22 @@ public class JavaRsaAndAesBenchmark implements BenchmarkAlgorithm {
         return keyPairGenerator.genKeyPair();
     }
 
-    private byte[] encryptRsa(byte[] message) throws Exception {
+    private byte[] encryptRsa(byte[] message) throws BadPaddingException, IllegalBlockSizeException {
         return encryptCipherRsa.doFinal(message);
     }
 
-    private byte[] decryptRsa(byte[] encrypted) throws Exception {
+    private byte[] decryptRsa(byte[] encrypted) throws BadPaddingException, IllegalBlockSizeException {
         return decryptCipherRsa.doFinal(encrypted);
     }
 
-    private String encryptAes(byte[] data, byte[] key) throws Exception {
+    private byte[] encryptAes(byte[] data, byte[] key) throws BadPaddingException, IllegalBlockSizeException, InvalidKeyException {
         encryptCipherAes.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"));
-        byte[] encVal = encryptCipherAes.doFinal(data);
-        return new BASE64Encoder().encode(encVal);
+        return encryptCipherAes.doFinal(data);
     }
 
-    private String decryptAes(String encryptedData, byte[] key) throws Exception {
+    private String decryptAes(byte[] encryptedData, byte[] key) throws BadPaddingException, IllegalBlockSizeException, InvalidKeyException {
         decryptCipherAes.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"));
-        byte[] decodedValue = base64Decoder.decodeBuffer(encryptedData);
-        byte[] decValue = decryptCipherAes.doFinal(decodedValue);
+        byte[] decValue = decryptCipherAes.doFinal(encryptedData);
         return new String(decValue);
     }
 
@@ -85,19 +80,15 @@ public class JavaRsaAndAesBenchmark implements BenchmarkAlgorithm {
 
     public void run(String text) throws Exception {
         byte[] iv = ivGen.generateKey().getEncoded();
-
-        byte[] plainText = text.getBytes(StandardCharsets.UTF_8);
-
-        String encryptedMessage = encryptAes(plainText, iv);
-
+        byte[] textBytes = text.getBytes(StandardCharsets.UTF_8);
+        byte[] encryptedMessage = encryptAes(textBytes, iv);
         byte[] encryptedIv = encryptRsa(iv);
 
-        byte[] decryptedIV = decryptRsa(encryptedIv);
-
-        String decryptedMessage = decryptAes(encryptedMessage, decryptedIV);
+        byte[] decryptedIv = decryptRsa(encryptedIv);
+        String decryptedMessage = decryptAes(encryptedMessage, decryptedIv);
 
         if (!decryptedMessage.equals(text)) {
-            throw new Exception("not match");
+            throw new AssertionError("not match");
         }
     }
 }

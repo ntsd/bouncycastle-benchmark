@@ -2,7 +2,11 @@ package me.ntsd.bouncycastlebenchmark.encryption;
 
 import me.ntsd.bouncycastlebenchmark.benchmark.BenchmarkAlgorithm;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -16,10 +20,10 @@ public class JavaRsaBenchmark implements BenchmarkAlgorithm {
 
     private Cipher encryptCipher;
 
-    public JavaRsaBenchmark() throws Exception {
+    public JavaRsaBenchmark() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
         KeyPair keyPair = buildKeyPair();
-        PublicKey publicKey = keyPair.getPublic();
-        PrivateKey privateKey = keyPair.getPrivate();
+        final PublicKey publicKey = keyPair.getPublic();
+        final PrivateKey privateKey = keyPair.getPrivate();
 
         encryptCipher = Cipher.getInstance("RSA");
         encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
@@ -35,11 +39,11 @@ public class JavaRsaBenchmark implements BenchmarkAlgorithm {
         return keyPairGenerator.genKeyPair();
     }
 
-    private byte[] encrypt(String message) throws Exception {
+    private byte[] encrypt(String message) throws BadPaddingException, IllegalBlockSizeException {
         return encryptCipher.doFinal(message.getBytes());
     }
 
-    private byte[] decrypt(byte [] encrypted) throws Exception {
+    private byte[] decrypt(byte [] encrypted) throws BadPaddingException, IllegalBlockSizeException {
         return decryptCipher.doFinal(encrypted);
     }
 
@@ -50,10 +54,11 @@ public class JavaRsaBenchmark implements BenchmarkAlgorithm {
 
     public void run(String text) throws Exception {
         byte[] encryptedMessage = encrypt(text);
+
         String decryptedMessage = new String(decrypt(encryptedMessage));
 
         if (!decryptedMessage.equals(text)) {
-            throw new Exception("not match");
+            throw new AssertionError("not match");
         }
     }
 }

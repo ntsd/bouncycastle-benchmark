@@ -67,16 +67,14 @@ public class BouncyCastleAesBenchmark implements BenchmarkAlgorithm {
         byte[] iv = ivGen.generateKey().getEncoded();
 
         CipherParameters ivAndKey = new ParametersWithIV(new KeyParameter(password), iv);
-
         byte[] plainText = text.getBytes(StandardCharsets.UTF_8);
         byte[] encryptedMessage = encryptAes(plainText, ivAndKey);
 
         CipherParameters ivAndKey2 = new ParametersWithIV(new KeyParameter(password), iv);
-
         String decryptedMessage = new String(decryptAes(encryptedMessage, ivAndKey2));
 
         if (!decryptedMessage.equals(text)) {
-            throw new Exception("not match");
+            throw new AssertionError("not match");
         }
     }
 

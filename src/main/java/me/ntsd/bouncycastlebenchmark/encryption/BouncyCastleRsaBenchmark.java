@@ -20,7 +20,7 @@ public class BouncyCastleRsaBenchmark implements BenchmarkAlgorithm {
     private AsymmetricBlockCipher encryptEngine;
     private AsymmetricBlockCipher decryptEngine;
 
-    private AsymmetricCipherKeyPair GenerateKeys() {
+    private AsymmetricCipherKeyPair generateKeys() {
         RSAKeyPairGenerator generator = new RSAKeyPairGenerator();
         generator.init(new RSAKeyGenerationParameters(
                 BigInteger.valueOf(0x10001), // public exponent
@@ -36,9 +36,9 @@ public class BouncyCastleRsaBenchmark implements BenchmarkAlgorithm {
         Security.addProvider(new BouncyCastleProvider());
 
         // RSA Init
-        AsymmetricCipherKeyPair keyPair = GenerateKeys();
-        AsymmetricKeyParameter privateKey = keyPair.getPrivate();
-        AsymmetricKeyParameter publicKey = keyPair.getPublic();
+        AsymmetricCipherKeyPair keyPair = generateKeys();
+        final AsymmetricKeyParameter privateKey = keyPair.getPrivate();
+        final AsymmetricKeyParameter publicKey = keyPair.getPublic();
 
         encryptEngine = new RSAEngine();
         encryptEngine.init(true, publicKey); // true for encryption
@@ -63,10 +63,11 @@ public class BouncyCastleRsaBenchmark implements BenchmarkAlgorithm {
     @Override
     public void run(String text) throws Exception {
         byte[] encryptedBytes = encryptRsa(text.getBytes());
+
         String decryptedMessage = new String(decryptRsa(encryptedBytes));
 
         if (!decryptedMessage.equals(text)) {
-            throw new Exception("not match");
+            throw new AssertionError("not match");
         }
     }
 }

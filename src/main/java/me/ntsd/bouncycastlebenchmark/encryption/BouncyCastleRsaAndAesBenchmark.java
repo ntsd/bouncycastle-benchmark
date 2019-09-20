@@ -62,8 +62,8 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
 
         // RSA Init
         AsymmetricCipherKeyPair keyPair = generateKeys();
-        AsymmetricKeyParameter privateKey = keyPair.getPrivate();
-        AsymmetricKeyParameter publicKey = keyPair.getPublic();
+        final AsymmetricKeyParameter privateKey = keyPair.getPrivate();
+        final AsymmetricKeyParameter publicKey = keyPair.getPublic();
 
         encryptEngine = new RSAEngine();
         encryptEngine.init(true, publicKey); // true for encryption
@@ -80,7 +80,7 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
         return decryptEngine.processBlock(encryptedBytes, 0, encryptedBytes.length);
     }
 
-    private byte[] cipherData(PaddedBufferedBlockCipher cipher, byte[] data) throws Exception {
+    private byte[] cipherData(PaddedBufferedBlockCipher cipher, byte[] data) throws InvalidCipherTextException {
         byte[] outputBuffer = new byte[cipher.getOutputSize(data.length)];
 
         int length1 = cipher.processBytes(data,  0, data.length, outputBuffer, 0);
@@ -93,13 +93,13 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
         return result;
     }
 
-    private byte[] encryptAes(byte[] plain, CipherParameters ivAndKey) throws Exception {
+    private byte[] encryptAes(byte[] plain, CipherParameters ivAndKey) throws InvalidCipherTextException {
         encryptCipherAes.init(true, ivAndKey);
 
         return cipherData(encryptCipherAes, plain);
     }
 
-    private byte[] decryptAes(byte[] cipher, CipherParameters ivAndKey) throws Exception {
+    private byte[] decryptAes(byte[] cipher, CipherParameters ivAndKey) throws InvalidCipherTextException {
         decryptCipherAes.init(false,  ivAndKey);
 
         return cipherData(decryptCipherAes, cipher);
@@ -115,23 +115,17 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
         byte[] iv = ivGen.generateKey().getEncoded();
 
         CipherParameters ivAndKey = new ParametersWithIV(new KeyParameter(password), iv);
-
         byte[] plainText = text.getBytes(StandardCharsets.UTF_8);
-
         byte[] encryptedMessage = encryptAes(plainText, ivAndKey);
-
         byte[] encryptedIv = encryptRsa(iv);
 
-        byte[] decryptedIV = decryptRsa(encryptedIv);
-
-        CipherParameters ivAndKey2 = new ParametersWithIV(new KeyParameter(password), decryptedIV);
-
+        byte[] decryptedIv = decryptRsa(encryptedIv);
+        CipherParameters ivAndKey2 = new ParametersWithIV(new KeyParameter(password), decryptedIv);
         byte[] decryptedMessageBytes = decryptAes(encryptedMessage, ivAndKey2);
-
         String decryptedMessage = new String(decryptedMessageBytes);
 
         if (!decryptedMessage.equals(text)) {
-            throw new Exception("not match");
+            throw new AssertionError("not match");
         }
     }
 }
