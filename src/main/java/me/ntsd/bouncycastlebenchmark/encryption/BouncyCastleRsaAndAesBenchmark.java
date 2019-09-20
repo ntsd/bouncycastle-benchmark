@@ -50,7 +50,7 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
         Security.addProvider(new BouncyCastleProvider());
         // AES Init
         KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-        keyGen.init(256); // key is 256 bits
+        keyGen.init(128); // key is 128 bits
         password = keyGen.generateKey().getEncoded();
 
         ivGen = KeyGenerator.getInstance("AES");

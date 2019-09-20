@@ -20,13 +20,20 @@ public class JavaRsaAndAesBenchmark implements BenchmarkAlgorithm {
 
     private KeyGenerator ivGen;
 
-    private Cipher decryptCipherRsa;
     private Cipher encryptCipherRsa;
+    private Cipher decryptCipherRsa;
+
+    private Cipher encryptCipherAes;
+    private Cipher decryptCipherAes;
+
 
     public JavaRsaAndAesBenchmark() throws Exception {
         // AES Init
-        ivGen = KeyGenerator.getInstance("AES");
-        ivGen.init(128); //iv is 128 bits
+        ivGen = KeyGenerator.getInstance("AES"); // AES 128 bit
+        ivGen.init(128); // iv is 128 bits
+
+        encryptCipherAes = Cipher.getInstance("AES");
+        decryptCipherAes = Cipher.getInstance("AES");
 
         // RSA Init
         KeyPair keyPair = buildKeyPair();
@@ -55,18 +62,16 @@ public class JavaRsaAndAesBenchmark implements BenchmarkAlgorithm {
         return decryptCipherRsa.doFinal(encrypted);
     }
 
-    private static String encryptAes(byte[] data, byte[] key) throws Exception {
-        Cipher c = Cipher.getInstance("AES");
-        c.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"));
-        byte[] encVal = c.doFinal(data);
+    private String encryptAes(byte[] data, byte[] key) throws Exception {
+        encryptCipherAes.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"));
+        byte[] encVal = encryptCipherAes.doFinal(data);
         return new BASE64Encoder().encode(encVal);
     }
 
-    private static String decryptAes(String encryptedData, byte[] key) throws Exception {
-        Cipher c = Cipher.getInstance("AES");
-        c.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"));
+    private String decryptAes(String encryptedData, byte[] key) throws Exception {
+        decryptCipherAes.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"));
         byte[] decodedValue = new BASE64Decoder().decodeBuffer(encryptedData);
-        byte[] decValue = c.doFinal(decodedValue);
+        byte[] decValue = decryptCipherAes.doFinal(decodedValue);
         return new String(decValue);
     }
 
