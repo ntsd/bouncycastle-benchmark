@@ -31,10 +31,10 @@ public class BouncyCastleAes {
         aesKeyGenerator.init(128);  // AES 128 bit
 
         ivGenerator = KeyGenerator.getInstance("AES", "BC");
-        ivGenerator.init(128); // iv is 128 bits
+        ivGenerator.init(128); // iv 128 bits
 
-        encryptCipherAes = Cipher.getInstance("AES", "BC");
-        decryptCipherAes = Cipher.getInstance("AES", "BC");
+        encryptCipherAes = Cipher.getInstance("AES/CBC/PKCS5PADDING", "BC");
+        decryptCipherAes = Cipher.getInstance("AES/CBC/PKCS5PADDING", "BC");
     }
 
     public byte[] encrypt(byte[] data, byte[] key, byte[] initVector) throws BadPaddingException, IllegalBlockSizeException, InvalidKeyException, InvalidAlgorithmParameterException {
