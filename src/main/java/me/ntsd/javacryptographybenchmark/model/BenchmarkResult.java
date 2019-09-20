@@ -7,6 +7,7 @@ public class BenchmarkResult {
     private String name;
     private List<AlgorithmResult> algorithmResults;
     private Long averageResult;
+    private Long sumResult;
 
     public String getName() {
         return name;
@@ -30,5 +31,13 @@ public class BenchmarkResult {
 
     public void setAverageResult(Long averageResult) {
         this.averageResult = averageResult;
+    }
+
+    public Long getSumResult() {
+        return sumResult;
+    }
+
+    public void setSumResult(Long sumResult) {
+        this.sumResult = sumResult;
     }
 }

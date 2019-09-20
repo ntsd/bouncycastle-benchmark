@@ -1,6 +1,5 @@
 package me.ntsd.javacryptographybenchmark.benchmark;
 
-import me.ntsd.javacryptographybenchmark.cryptography.BouncyCastleAes;
 import me.ntsd.javacryptographybenchmark.cryptography.JavaAes;
 
 import javax.crypto.NoSuchPaddingException;
@@ -22,7 +21,7 @@ public class JavaAesBenchmark implements BenchmarkAlgorithm {
 
     @Override
     public String getAlgorithmName() {
-        return "Bouncy Castle AES";
+        return "Javax Crypto AES";
     }
 
     @Override

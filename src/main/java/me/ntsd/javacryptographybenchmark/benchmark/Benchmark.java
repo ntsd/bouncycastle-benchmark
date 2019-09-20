@@ -38,6 +38,8 @@ public class Benchmark {
             algorithmResultList.add(algorithmResult);
         }
 
+        benchmarkResult.setSumResult(timeAll);
+
         benchmarkResult.setAverageResult(timeAll / numbersAll);
 
         benchmarkResult.setAlgorithmResults(algorithmResultList);

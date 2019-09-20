@@ -1,24 +1,12 @@
 package me.ntsd.javacryptographybenchmark.benchmark;
 
-import me.ntsd.javacryptographybenchmark.benchmark.BenchmarkAlgorithm;
 import me.ntsd.javacryptographybenchmark.cryptography.JavaAes;
 import me.ntsd.javacryptographybenchmark.cryptography.JavaRsa;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 
 
 public class JavaRsaAndAesBenchmark implements BenchmarkAlgorithm {
