@@ -1,6 +1,5 @@
 package me.ntsd.bouncycastlebenchmark.encryption;
 
-
 import me.ntsd.bouncycastlebenchmark.benchmark.BenchmarkAlgorithm;
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.engines.AESEngine;
@@ -80,7 +79,11 @@ public class BouncyCastleAesBenchmark implements BenchmarkAlgorithm {
 
         CipherParameters ivAndKey2 = new ParametersWithIV(new KeyParameter(password), iv);
 
-        byte[] decryptedMessage = decrypt(encryptedMessage, ivAndKey2);
+        String decryptedMessage = new String(decrypt(encryptedMessage, ivAndKey2));
+
+        if (!decryptedMessage.equals(text)) {
+            throw new Exception("not match");
+        }
     }
 
     @Override

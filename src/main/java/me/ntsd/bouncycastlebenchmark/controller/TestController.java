@@ -30,11 +30,11 @@ public class TestController {
         JavaRsaAndAesBenchmark javaRsaAndAesBenchmark = new JavaRsaAndAesBenchmark();
         JavaRsaBenchmark javaRsaBenchmark = new JavaRsaBenchmark();
 
-        benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(bouncyCastleRsaAndAesBenchmark, message, Arrays.asList(10, 50, 100)));
-        benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(javaRsaAndAesBenchmark, message, Arrays.asList(10, 50, 100)));
+        benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(bouncyCastleRsaAndAesBenchmark, message, Arrays.asList(10, 50, 100, 500)));
+        benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(javaRsaAndAesBenchmark, message, Arrays.asList(10, 50, 100, 500)));
 
-        benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(bouncyCastleRsaBenchmark, message, Arrays.asList(10, 50, 100)));
-        benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(javaRsaBenchmark, message, Arrays.asList(10, 50, 100)));
+        benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(bouncyCastleRsaBenchmark, message, Arrays.asList(10, 50, 100, 500)));
+        benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(javaRsaBenchmark, message, Arrays.asList(10, 50, 100, 500)));
 
         return benchmarkResultList;
     }

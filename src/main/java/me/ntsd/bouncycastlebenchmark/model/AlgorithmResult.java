@@ -2,22 +2,23 @@ package me.ntsd.bouncycastlebenchmark.model;
 
 
 public class AlgorithmResult {
-    private Long time;
-    private Integer number;
 
-    public Long getTime() {
+    private long time;
+    private int number;
+
+    public long getTime() {
         return time;
     }
 
-    public void setTime(Long time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
-    public Integer getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 }

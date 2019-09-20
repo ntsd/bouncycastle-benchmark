@@ -49,7 +49,11 @@ public class JavaRsaBenchmark implements BenchmarkAlgorithm {
     }
 
     public void run(String text) throws Exception {
-        byte[] encrypted = encrypt(text);
-        byte[] verified = decrypt(encrypted);
+        byte[] encryptedMessage = encrypt(text);
+        String decryptedMessage = new String(decrypt(encryptedMessage));
+
+        if (!decryptedMessage.equals(text)) {
+            throw new Exception("not match");
+        }
     }
 }

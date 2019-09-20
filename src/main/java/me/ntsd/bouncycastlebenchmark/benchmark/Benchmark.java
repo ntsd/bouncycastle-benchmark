@@ -15,22 +15,22 @@ public class Benchmark {
 
         List<AlgorithmResult> algorithmResultList = new ArrayList<>();
 
-        Long timeAll = 0L;
-        Integer numbersAll = 0;
+        long timeAll = 0L;
+        int numbersAll = 0;
 
-        for (int i = 0; i < numbers.size(); i++) {
-            Long startTime = System.nanoTime();
-
+        for (int number : numbers) {
             AlgorithmResult algorithmResult = new AlgorithmResult();
 
-            algorithmResult.setNumber(numbers.get(i));
-            numbersAll += numbers.get(i);
+            algorithmResult.setNumber(number);
+            numbersAll += number;
 
-            for (int j = 0; j < numbers.get(i); j++) {
+            long startTime = System.nanoTime();
+
+            for (int j = 0; j < number; j++) {
                 benchmarkAlgorithm.run(input);
             }
 
-            Long time = System.nanoTime() - startTime;
+            long time = System.nanoTime() - startTime;
 
             timeAll += time;
             algorithmResult.setTime(time);

@@ -87,5 +87,9 @@ public class BouncyCastleRsaBenchmark implements BenchmarkAlgorithm {
     public void run(String text) throws Exception {
         String encryptedMessage = encryptRsa(text.getBytes());
         String decryptedMessage = decryptRsa(encryptedMessage);
+
+        if (!decryptedMessage.equals(text)) {
+            throw new Exception("not match");
+        }
     }
 }

@@ -85,11 +85,11 @@ public class JavaRsaAndAesBenchmark implements BenchmarkAlgorithm {
         byte[] encryptedIv = encryptRsa(iv);
 
         byte[] decryptedIV = decryptRsa(encryptedIv);
-        try {
-            String decryptedMessage = decryptAes(encryptedMessage, decryptedIV);
-        } catch (Exception e) {
-            System.err.println("Iv was: " + new String(iv) + " and decrypted Iv is: " + new String(decryptedIV));
-            throw e;
+
+        String decryptedMessage = decryptAes(encryptedMessage, decryptedIV);
+
+        if (!decryptedMessage.equals(text)) {
+            throw new Exception("not match");
         }
     }
 }

@@ -155,13 +155,12 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
 
         byte[] decryptedIV = decryptRsa(encryptedIv, privateKey);
 
-        try {
-            CipherParameters ivAndKey2 = new ParametersWithIV(new KeyParameter(password), decryptedIV);
+        CipherParameters ivAndKey2 = new ParametersWithIV(new KeyParameter(password), decryptedIV);
 
-            byte[] decryptedMessage = decryptAes(encryptedMessage, ivAndKey2);
-        } catch (Exception e) {
-            System.out.println("Iv was: " + new String(iv) + " and decrypted Iv is: " + new String(decryptedIV));
-            throw e;
+        String decryptedMessage = new String(decryptAes(encryptedMessage, ivAndKey2));
+
+        if (!decryptedMessage.equals(text)) {
+            throw new Exception("not match");
         }
     }
 }
