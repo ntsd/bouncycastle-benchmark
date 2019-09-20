@@ -1,4 +1,4 @@
-package me.ntsd.bouncycastlebenchmark.model;
+package me.ntsd.javacryptographybenchmark.model;
 
 
 public class AlgorithmResult {

@@ -1,12 +1,12 @@
-package me.ntsd.bouncycastlebenchmark.controller;
+package me.ntsd.javacryptographybenchmark.controller;
 
-import me.ntsd.bouncycastlebenchmark.benchmark.Benchmark;
-import me.ntsd.bouncycastlebenchmark.encryption.BouncyCastleAesBenchmark;
-import me.ntsd.bouncycastlebenchmark.encryption.BouncyCastleRsaAndAesBenchmark;
-import me.ntsd.bouncycastlebenchmark.encryption.BouncyCastleRsaBenchmark;
-import me.ntsd.bouncycastlebenchmark.encryption.JavaRsaAndAesBenchmark;
-import me.ntsd.bouncycastlebenchmark.encryption.JavaRsaBenchmark;
-import me.ntsd.bouncycastlebenchmark.model.BenchmarkResult;
+import me.ntsd.javacryptographybenchmark.benchmark.Benchmark;
+import me.ntsd.javacryptographybenchmark.encryption.BouncyCastleAesBenchmark;
+import me.ntsd.javacryptographybenchmark.encryption.BouncyCastleRsaAndAesBenchmark;
+import me.ntsd.javacryptographybenchmark.encryption.BouncyCastleRsaBenchmark;
+import me.ntsd.javacryptographybenchmark.encryption.JavaRsaAndAesBenchmark;
+import me.ntsd.javacryptographybenchmark.encryption.JavaRsaBenchmark;
+import me.ntsd.javacryptographybenchmark.model.BenchmarkResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;

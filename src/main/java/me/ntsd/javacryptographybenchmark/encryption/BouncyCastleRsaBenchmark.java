@@ -1,6 +1,6 @@
-package me.ntsd.bouncycastlebenchmark.encryption;
+package me.ntsd.javacryptographybenchmark.encryption;
 
-import me.ntsd.bouncycastlebenchmark.benchmark.BenchmarkAlgorithm;
+import me.ntsd.javacryptographybenchmark.benchmark.BenchmarkAlgorithm;
 import org.bouncycastle.crypto.AsymmetricBlockCipher;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.InvalidCipherTextException;

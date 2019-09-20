@@ -1,7 +1,7 @@
-package me.ntsd.bouncycastlebenchmark.benchmark;
+package me.ntsd.javacryptographybenchmark.benchmark;
 
-import me.ntsd.bouncycastlebenchmark.model.AlgorithmResult;
-import me.ntsd.bouncycastlebenchmark.model.BenchmarkResult;
+import me.ntsd.javacryptographybenchmark.model.AlgorithmResult;
+import me.ntsd.javacryptographybenchmark.model.BenchmarkResult;
 
 import java.util.ArrayList;
 import java.util.List;

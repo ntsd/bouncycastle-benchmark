@@ -1,4 +1,4 @@
-package me.ntsd.bouncycastlebenchmark.benchmark;
+package me.ntsd.javacryptographybenchmark.benchmark;
 
 
 public interface BenchmarkAlgorithm {
