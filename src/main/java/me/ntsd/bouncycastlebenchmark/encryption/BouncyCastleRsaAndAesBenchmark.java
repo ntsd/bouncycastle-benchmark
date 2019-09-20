@@ -34,13 +34,16 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
     private RSAEngine encryptEngine;
     private AsymmetricBlockCipher decryptEngine;
 
+    private PaddedBufferedBlockCipher encryptCipherAes;
+    private PaddedBufferedBlockCipher decryptCipherAes;
+
     private static AsymmetricCipherKeyPair generateKeys() {
         RSAKeyPairGenerator generator = new RSAKeyPairGenerator();
         generator.init(new RSAKeyGenerationParameters(
             BigInteger.valueOf(0x10001), // public exponent
             new SecureRandom(), // random method
             1024, // key size
-            80 // strength
+            12 // certainty
         ));
 
         return generator.generateKeyPair();
@@ -55,6 +58,9 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
 
         ivGen = KeyGenerator.getInstance("AES");
         ivGen.init(128); // iv is 128 bits
+
+        encryptCipherAes = new PaddedBufferedBlockCipher(new CBCBlockCipher(new AESEngine()));
+        decryptCipherAes = new PaddedBufferedBlockCipher(new CBCBlockCipher(new AESEngine()));
 
         // RSA Init
         AsymmetricCipherKeyPair keyPair = generateKeys();
@@ -112,28 +118,16 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
         return result;
     }
 
-    private static byte[] encryptAes(byte[] plain, CipherParameters ivAndKey) throws Exception {
-        PaddedBufferedBlockCipher aes = new PaddedBufferedBlockCipher(
-                new CBCBlockCipher(
-                        new AESEngine()
-                )
-        );
+    private byte[] encryptAes(byte[] plain, CipherParameters ivAndKey) throws Exception {
+        encryptCipherAes.init(true, ivAndKey);
 
-        aes.init(true, ivAndKey);
-
-        return cipherData(aes, plain);
-
+        return cipherData(encryptCipherAes, plain);
     }
 
-    private static byte[] decryptAes(byte[] cipher, CipherParameters ivAndKey) throws Exception {
-        PaddedBufferedBlockCipher aes2 = new PaddedBufferedBlockCipher(
-                new CBCBlockCipher(
-                        new AESEngine()
-                )
-        );
-        aes2.init(false,  ivAndKey);
+    private byte[] decryptAes(byte[] cipher, CipherParameters ivAndKey) throws Exception {
+        decryptCipherAes.init(false,  ivAndKey);
 
-        return cipherData(aes2, cipher);
+        return cipherData(decryptCipherAes, cipher);
     }
 
     @Override
@@ -157,7 +151,9 @@ public class BouncyCastleRsaAndAesBenchmark implements BenchmarkAlgorithm {
 
         CipherParameters ivAndKey2 = new ParametersWithIV(new KeyParameter(password), decryptedIV);
 
-        String decryptedMessage = new String(decryptAes(encryptedMessage, ivAndKey2));
+        byte[] decryptedMessageBytes = decryptAes(encryptedMessage, ivAndKey2);
+
+        String decryptedMessage = new String(decryptedMessageBytes);
 
         if (!decryptedMessage.equals(text)) {
             throw new Exception("not match");
