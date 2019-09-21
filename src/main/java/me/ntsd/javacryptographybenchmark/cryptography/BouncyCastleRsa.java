@@ -1,55 +1,52 @@
 package me.ntsd.javacryptographybenchmark.cryptography;
 
-import org.bouncycastle.crypto.AsymmetricBlockCipher;
-import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
-import org.bouncycastle.crypto.InvalidCipherTextException;
-import org.bouncycastle.crypto.engines.RSAEngine;
-import org.bouncycastle.crypto.generators.RSAKeyPairGenerator;
-import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
-import org.bouncycastle.crypto.params.RSAKeyGenerationParameters;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidKeyException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.Security;
 
 
 public class BouncyCastleRsa {
 
-    private AsymmetricBlockCipher encryptEngine;
-    private AsymmetricBlockCipher decryptEngine;
+    private Cipher decryptCipher;
+    private Cipher encryptCipher;
 
-    public BouncyCastleRsa() {
+    public BouncyCastleRsa() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, NoSuchProviderException {
         Security.addProvider(new BouncyCastleProvider());
 
-        AsymmetricCipherKeyPair keyPair = generateKeys();
-        final AsymmetricKeyParameter publicKey = keyPair.getPublic();
-        final AsymmetricKeyParameter privateKey = keyPair.getPrivate();
+        KeyPair keyPair = buildKeyPair();
+        final PublicKey publicKey = keyPair.getPublic();
+        final PrivateKey privateKey = keyPair.getPrivate();
 
-        encryptEngine = new RSAEngine();
-        encryptEngine.init(true, publicKey); // true for cryptography
+        encryptCipher = Cipher.getInstance("RSA/ECB/PKCS1Padding", "BC");
+        encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
-        decryptEngine = new RSAEngine();
-        decryptEngine.init(false, privateKey); // false for decryption
+        decryptCipher = Cipher.getInstance("RSA/ECB/PKCS1Padding", "BC");
+        decryptCipher.init(Cipher.DECRYPT_MODE, privateKey);
     }
 
-    private AsymmetricCipherKeyPair generateKeys() {
-        RSAKeyPairGenerator generator = new RSAKeyPairGenerator();
-        generator.init(new RSAKeyGenerationParameters(
-                BigInteger.valueOf(0x10001), // public exponent
-                new SecureRandom(), // random number generator
-                1024, // key size
-                64 // certainty
-        ));
-
-        return generator.generateKeyPair();
+    private KeyPair buildKeyPair() throws NoSuchAlgorithmException, NoSuchProviderException {
+        final int keySize = 1024;
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA", "BC");
+        keyPairGenerator.initialize(keySize);
+        return keyPairGenerator.genKeyPair();
     }
 
-    public byte[] encrypt(byte[] data) throws InvalidCipherTextException {
-        return encryptEngine.processBlock(data, 0, data.length);
+    public byte[] encrypt(byte[] data) throws BadPaddingException, IllegalBlockSizeException {
+        return encryptCipher.doFinal(data);
     }
 
-    public byte[] decrypt(byte[] encryptedBytes) throws InvalidCipherTextException {
-        return decryptEngine.processBlock(encryptedBytes, 0, encryptedBytes.length);
+    public byte[] decrypt(byte[] encrypted) throws BadPaddingException, IllegalBlockSizeException {
+        return decryptCipher.doFinal(encrypted);
     }
 }

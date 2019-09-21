@@ -1,6 +1,6 @@
 package me.ntsd.javacryptographybenchmark.benchmark;
 
-import me.ntsd.javacryptographybenchmark.cryptography.BouncyCastleAes;
+import me.ntsd.javacryptographybenchmark.cryptography.BouncyCastleAesWithIv;
 
 import javax.crypto.NoSuchPaddingException;
 import java.nio.charset.StandardCharsets;
@@ -10,11 +10,11 @@ import java.security.NoSuchProviderException;
 
 public class BouncyCastleAesBenchmark implements BenchmarkAlgorithm {
 
-    private BouncyCastleAes bouncyCastleAes;
+    private BouncyCastleAesWithIv bouncyCastleAes;
     private byte[] secretKey;
 
     public BouncyCastleAesBenchmark() throws NoSuchPaddingException, NoSuchAlgorithmException, NoSuchProviderException {
-        bouncyCastleAes = new BouncyCastleAes();
+        bouncyCastleAes = new BouncyCastleAesWithIv();
 
         secretKey = bouncyCastleAes.getAesKeyGenerator().generateKey().getEncoded();
     }
@@ -26,10 +26,10 @@ public class BouncyCastleAesBenchmark implements BenchmarkAlgorithm {
 
     @Override
     public void run(String text) throws Exception {
-        byte[] iv = bouncyCastleAes.getIvGenerator().generateKey().getEncoded();
-        byte[] encryptedBytes = bouncyCastleAes.encrypt(text.getBytes(StandardCharsets.UTF_8), secretKey, iv);
+        byte[] iv = bouncyCastleAes.getAesKeyGenerator().generateKey().getEncoded();
+        byte[] encryptedBytes = bouncyCastleAes.encryptWithIv(text.getBytes(StandardCharsets.UTF_8), secretKey, iv);
 
-        String decryptedMessage = new String(bouncyCastleAes.decrypt(encryptedBytes, secretKey, iv));
+        String decryptedMessage = new String(bouncyCastleAes.decryptWithIv(encryptedBytes, secretKey, iv));
 
         if (!decryptedMessage.equals(text)) {
             throw new AssertionError("Message not match");

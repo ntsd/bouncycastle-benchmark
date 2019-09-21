@@ -22,10 +22,10 @@ public class JavaRsa {
         final PublicKey publicKey = keyPair.getPublic();
         final PrivateKey privateKey = keyPair.getPrivate();
 
-        encryptCipher = Cipher.getInstance("RSA");
+        encryptCipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
-        decryptCipher = Cipher.getInstance("RSA");
+        decryptCipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         decryptCipher.init(Cipher.DECRYPT_MODE, privateKey);
     }
 

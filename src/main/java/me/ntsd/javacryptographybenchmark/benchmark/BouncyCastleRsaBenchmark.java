@@ -2,14 +2,18 @@ package me.ntsd.javacryptographybenchmark.benchmark;
 
 import me.ntsd.javacryptographybenchmark.cryptography.BouncyCastleRsa;
 
+import javax.crypto.NoSuchPaddingException;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 
 
 public class BouncyCastleRsaBenchmark implements BenchmarkAlgorithm {
 
     private BouncyCastleRsa bouncyCastleRsa;
 
-    public BouncyCastleRsaBenchmark() {
+    public BouncyCastleRsaBenchmark() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, NoSuchProviderException {
         bouncyCastleRsa = new BouncyCastleRsa();
     }
 

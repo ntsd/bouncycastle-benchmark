@@ -7,9 +7,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -18,7 +16,6 @@ import java.security.Security;
 
 public class BouncyCastleAes {
 
-    private KeyGenerator ivGenerator;
     private KeyGenerator aesKeyGenerator;
 
     private Cipher encryptCipherAes;
@@ -30,25 +27,18 @@ public class BouncyCastleAes {
         aesKeyGenerator = KeyGenerator.getInstance("AES", "BC");
         aesKeyGenerator.init(128);  // AES 128 bit
 
-        ivGenerator = KeyGenerator.getInstance("AES", "BC");
-        ivGenerator.init(128); // iv 128 bits
-
-        encryptCipherAes = Cipher.getInstance("AES/CBC/PKCS5PADDING", "BC");
-        decryptCipherAes = Cipher.getInstance("AES/CBC/PKCS5PADDING", "BC");
+        encryptCipherAes = Cipher.getInstance("AES/ECB/PKCS5Padding", "BC");
+        decryptCipherAes = Cipher.getInstance("AES/ECB/PKCS5Padding", "BC");
     }
 
-    public byte[] encrypt(byte[] data, byte[] key, byte[] initVector) throws BadPaddingException, IllegalBlockSizeException, InvalidKeyException, InvalidAlgorithmParameterException {
-        encryptCipherAes.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"), new IvParameterSpec(initVector));
+    public byte[] encrypt(byte[] data, byte[] key) throws BadPaddingException, IllegalBlockSizeException, InvalidKeyException {
+        encryptCipherAes.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"));
         return encryptCipherAes.doFinal(data);
     }
 
-    public byte[] decrypt(byte[] encryptedData, byte[] key, byte[] initVector) throws BadPaddingException, IllegalBlockSizeException, InvalidKeyException, InvalidAlgorithmParameterException {
-        decryptCipherAes.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new IvParameterSpec(initVector));
+    public byte[] decrypt(byte[] encryptedData, byte[] key) throws BadPaddingException, IllegalBlockSizeException, InvalidKeyException {
+        decryptCipherAes.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"));
         return decryptCipherAes.doFinal(encryptedData);
-    }
-
-    public KeyGenerator getIvGenerator() {
-        return ivGenerator;
     }
 
     public KeyGenerator getAesKeyGenerator() {
