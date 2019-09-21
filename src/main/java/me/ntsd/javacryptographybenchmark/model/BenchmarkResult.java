@@ -4,10 +4,21 @@ import java.util.List;
 
 
 public class BenchmarkResult {
+
     private String name;
     private List<AlgorithmResult> algorithmResults;
-    private Long averageResult;
-    private Long sumResult;
+    private long average;
+    private long score;
+
+    public BenchmarkResult() {
+    }
+
+    public BenchmarkResult(String name, List<AlgorithmResult> algorithmResults, long average, long score) {
+        this.name = name;
+        this.algorithmResults = algorithmResults;
+        this.average = average;
+        this.score = score;
+    }
 
     public String getName() {
         return name;
@@ -25,19 +36,19 @@ public class BenchmarkResult {
         this.algorithmResults = algorithmResults;
     }
 
-    public Long getAverageResult() {
-        return averageResult;
+    public long getAverage() {
+        return average;
     }
 
-    public void setAverageResult(Long averageResult) {
-        this.averageResult = averageResult;
+    public void setAverage(long average) {
+        this.average = average;
     }
 
-    public Long getSumResult() {
-        return sumResult;
+    public long getScore() {
+        return score;
     }
 
-    public void setSumResult(Long sumResult) {
-        this.sumResult = sumResult;
+    public void setScore(long score) {
+        this.score = score;
     }
 }

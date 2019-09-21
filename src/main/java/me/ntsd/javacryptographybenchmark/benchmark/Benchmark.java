@@ -33,14 +33,15 @@ public class Benchmark {
             long time = System.nanoTime() - startTime;
 
             timeAll += time;
-            algorithmResult.setTime(time);
+            algorithmResult.setScore(time);
+            algorithmResult.setAverage(time / number);
 
             algorithmResultList.add(algorithmResult);
         }
 
-        benchmarkResult.setSumResult(timeAll);
+        benchmarkResult.setScore(timeAll);
 
-        benchmarkResult.setAverageResult(timeAll / numbersAll);
+        benchmarkResult.setAverage(timeAll / numbersAll);
 
         benchmarkResult.setAlgorithmResults(algorithmResultList);
 
