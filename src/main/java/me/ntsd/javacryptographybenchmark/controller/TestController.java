@@ -1,10 +1,10 @@
 package me.ntsd.javacryptographybenchmark.controller;
 
 import me.ntsd.javacryptographybenchmark.benchmark.Benchmark;
-import me.ntsd.javacryptographybenchmark.benchmark.BouncyCastleAesBenchmark;
+import me.ntsd.javacryptographybenchmark.benchmark.BouncyCastleAesWithIvBenchmark;
 import me.ntsd.javacryptographybenchmark.benchmark.BouncyCastleRsaAndAesBenchmark;
 import me.ntsd.javacryptographybenchmark.benchmark.BouncyCastleRsaBenchmark;
-import me.ntsd.javacryptographybenchmark.benchmark.JavaAesBenchmark;
+import me.ntsd.javacryptographybenchmark.benchmark.JavaAesWithIvBenchmark;
 import me.ntsd.javacryptographybenchmark.benchmark.JavaRsaAndAesBenchmark;
 import me.ntsd.javacryptographybenchmark.benchmark.JavaRsaBenchmark;
 import me.ntsd.javacryptographybenchmark.model.BenchmarkResult;
@@ -48,11 +48,11 @@ public class TestController {
         JavaRsaBenchmark javaRsaBenchmark = new JavaRsaBenchmark();
         benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(javaRsaBenchmark, message, testNumbersList));
 
-        BouncyCastleAesBenchmark bouncyCastleAesBenchmark = new BouncyCastleAesBenchmark();
-        benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(bouncyCastleAesBenchmark, message, testNumbersList));
+        BouncyCastleAesWithIvBenchmark bouncyCastleAesWithIvBenchmark = new BouncyCastleAesWithIvBenchmark();
+        benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(bouncyCastleAesWithIvBenchmark, message, testNumbersList));
 
-        JavaAesBenchmark javaAesBenchmark = new JavaAesBenchmark();
-        benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(javaAesBenchmark, message, testNumbersList));
+        JavaAesWithIvBenchmark javaAesWithIvBenchmark = new JavaAesWithIvBenchmark();
+        benchmarkResultList.add(benchmark.getAlgorithmBenchmarkResult(javaAesWithIvBenchmark, message, testNumbersList));
 
         return benchmarkResultList;
     }

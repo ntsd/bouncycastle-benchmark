@@ -8,12 +8,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 
 
-public class BouncyCastleAesBenchmark implements BenchmarkAlgorithm {
+public class BouncyCastleAesWithIvBenchmark implements BenchmarkAlgorithm {
 
     private BouncyCastleAesWithIv bouncyCastleAes;
     private byte[] secretKey;
 
-    public BouncyCastleAesBenchmark() throws NoSuchPaddingException, NoSuchAlgorithmException, NoSuchProviderException {
+    public BouncyCastleAesWithIvBenchmark() throws NoSuchPaddingException, NoSuchAlgorithmException, NoSuchProviderException {
         bouncyCastleAes = new BouncyCastleAesWithIv();
 
         secretKey = bouncyCastleAes.getAesKeyGenerator().generateKey().getEncoded();
